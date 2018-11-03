@@ -9,8 +9,20 @@ FileStream::~FileStream()
     fileWrite.close();
 }
 
-bool FileStream::openFile()
+bool FileStream::openFile(std::string filename)
 {
+    if(!filename.empty())
+    {
+        fileRead.open(filename, std::ios::in);
+
+        if (fileRead.good())
+        {
+            std::cout << "Done, you can now read the data\n";
+            return true;
+        }
+        return false;
+    }
+
     do
     {
         std::cout << "Insert filename\n";

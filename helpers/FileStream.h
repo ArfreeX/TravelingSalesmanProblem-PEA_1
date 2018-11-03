@@ -14,7 +14,7 @@ class FileStream
 {
 public:
     ~FileStream();
-    bool openFile();
+    bool openFile(std::string filename = "");
     void readStart(int &edges, int &vertexs, int &starting, int &ending);
     std::vector<std::vector<int>> readData();
     void write(std::vector<std::vector<int>> array);
