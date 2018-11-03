@@ -8,12 +8,15 @@ namespace tsp
 {
 
 class BruteForce :
-        public GenericTsp
+    public GenericTsp
 {
 public:
     BruteForce(std::vector<std::vector<int>> roadMap);
 
     void computeBestRoute();
+
+private:
+    std::vector<unsigned> cities;
 };
 
 } // namespace tsp

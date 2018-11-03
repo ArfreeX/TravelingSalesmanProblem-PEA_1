@@ -8,7 +8,7 @@ namespace tsp
 {
 
 class DynamicProgramming :
-        public GenericTsp
+    public GenericTsp
 {
 public:
     DynamicProgramming(std::vector<std::vector<int>> roadMap);

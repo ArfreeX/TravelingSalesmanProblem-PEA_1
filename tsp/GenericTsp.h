@@ -1,8 +1,9 @@
-#pragma oncea
+#pragma once
 #ifndef TSP_H
 #define TSP_H
 
 #include <vector>
+#include <limits.h>
 #include <list>
 #include <iostream>
 
@@ -14,15 +15,21 @@ class GenericTsp
 public:
     GenericTsp(std::vector<std::vector<int>> roadMap);
 
-    void printResult();
+    int getDistanceBetween(unsigned source, unsigned destination);
+
+    bool checkIfVisited(unsigned city);
+
+    std::string resultToString();
 
     virtual void computeBestRoute() = 0;
+
     virtual ~GenericTsp() = 0;
 
 protected:
     std::vector<std::vector<int>> roadMap;
     std::vector<std::vector<int>> bestRoute;
-    int routeWeight = 0;
+    std::vector<bool> visitedCities;
+    int routeWeight = INT_MAX;
 };
 
 } // namespace tsp

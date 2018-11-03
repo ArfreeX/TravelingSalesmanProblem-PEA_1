@@ -8,7 +8,7 @@ namespace tsp
 {
 
 class BranchAndBound :
-        public GenericTsp
+    public GenericTsp
 {
 public:
     BranchAndBound(std::vector<std::vector<int>> roadMap);

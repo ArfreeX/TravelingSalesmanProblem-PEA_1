@@ -23,6 +23,10 @@ public:
          return std::chrono::duration_cast<TIME>(Clock::now() - beginning).count();
      }
 
+     long double ns_to_ms(long long int time)
+     {
+         return static_cast<long double>(time)/1000000;
+     }
 private:
      Clock::time_point beginning;
 };
