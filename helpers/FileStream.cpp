@@ -86,11 +86,10 @@ std::vector<std::vector<int>> FileStream::readData()
     return roadMap;
 }
 
-void FileStream::write(std::vector<std::vector<int>> roadMap)
+void FileStream::write(std::vector<std::vector<int>> roadMap, std::string filename)
 {
-    std::cin >> filename;  // preferable "title.csv" since it will be easier to manipulate with data;
-    //filename = "WynikiGraf2.csv";
-    fileWrite.open(filename, std::ios::out | std::ios::app);
+    //std::cin >> filename;
+    fileWrite.open(filename, std::ios::out);
     fileWrite << roadMap.size() << std::endl;
     for(auto & road : roadMap)
     {

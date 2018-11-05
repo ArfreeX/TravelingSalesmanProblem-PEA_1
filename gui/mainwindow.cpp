@@ -6,7 +6,7 @@
 #include "tsp/DynamicProgramming.h"
 #include "tsp/BranchAndBound.h"
 #include "ui_mainwindow.h"
-
+#include "gui/TestModule.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,7 +22,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    std::string filename = QFileDialog::getOpenFileName(this, tr("Open file"), "/home",
+    std::string filename = QFileDialog::getOpenFileName(this, tr("Open file"), "/home/arfree/Desktop/PEA_DATA_SETS",
                                                     "All files (*);;"
                                                     "Text file (*.txt)"
                                                     ).toUtf8().constData();
@@ -129,4 +129,11 @@ void MainWindow::on_runButton_clicked()
             + std::to_string(timer.ns_to_ms((timer.elapsed()))) + " ms";
 
     printResult(tspSolver->resultToString() + timeResult);
+}
+
+void MainWindow::on_testModuleButton_clicked()
+{
+    TestModule d;
+    d.show();
+    d.exec();
 }

@@ -17,7 +17,7 @@ public:
     bool openFile(std::string filename = "");
     void readStart(int &edges, int &vertexs, int &starting, int &ending);
     std::vector<std::vector<int>> readData();
-    void write(std::vector<std::vector<int>> array);
+    void write(std::vector<std::vector<int>> array, std::string filename);
 
 private:
     std::ifstream fileRead; // odczyt z pliku

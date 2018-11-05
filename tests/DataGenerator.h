@@ -1,6 +1,7 @@
 #ifndef DATAGENERATOR_H
 #define DATAGENERATOR_H
 
+#include <limits.h>
 #include "helpers/FileStream.h"
 #include "helpers/RandomNumberGenerator.h"
 
@@ -9,7 +10,7 @@ namespace tests {
 class DataGenerator
 {
 public:
-    static void drawData(unsigned dataSize, int dataRange)
+    static std::vector<std::vector<int>> drawData(unsigned dataSize, unsigned dataRange)
     {
         helpers::FileStream file;
         helpers::RandomNumberGenerator numberGen(dataRange);
@@ -21,7 +22,7 @@ public:
             {
                 if(i == j)
                 {
-                    dataSet[i].emplace_back(0);
+                    dataSet[i].emplace_back(INT_MAX);
                 }
                 else
                 {
@@ -30,7 +31,7 @@ public:
             }
         }
 
-        file.write(dataSet);
+        return dataSet;
     }
 };
 } // namespace tests

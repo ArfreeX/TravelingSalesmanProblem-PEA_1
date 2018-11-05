@@ -16,10 +16,6 @@ BruteForce::BruteForce(std::vector<std::vector<int>> roadMap)
     {
         cities.push_back(i);
     }
-
-    bestRoute.resize(roadMap.size());
-    bestRoute[0][0] = 0;
-    bestRoute[0][1] = 0;
 };
 
 void BruteForce::computeBestRoute()
@@ -28,12 +24,13 @@ void BruteForce::computeBestRoute()
     {
         return;
     }
-
-    std::vector<unsigned> tempCitiesOrder;
+    std::cout << "DUPA";
+    std::vector<unsigned> tempOrderOfCities;
     unsigned long lastCity = cities.size() - 1;
     do
     {
         int temporaryRoadWeight = roadMap[0][cities[0]];
+
         for(unsigned i = 0; i < lastCity; i++)
         {
             temporaryRoadWeight += roadMap[cities[i]][cities[i+1]];
@@ -41,16 +38,29 @@ void BruteForce::computeBestRoute()
         temporaryRoadWeight += roadMap[lastCity][0];
 
 
-        if(temporaryRoadWeight < routeWeight)
+        if(temporaryRoadWeight < minRouteWeight)
         {
-            routeWeight = temporaryRoadWeight;
-            for(unsigned i = 1; i < roadMap.size(); i++)
-            {
-                bestRoute[i][0] = cities[i - 1];
-                bestRoute[i][1] = roadMap[cities[i - 1]][cities[i]];
-            }
+            minRouteWeight = temporaryRoadWeight;
+            tempOrderOfCities = cities;
         }
     }while(std::next_permutation(cities.begin(), cities.end()));
+
+    cities = tempOrderOfCities;
+    cities.emplace_back(0);
+
+    for(unsigned i = 0; i < cities.size(); i++)
+    {
+        bestRoute[i + 1][0] = cities[i];
+
+        if(i)
+        {
+            bestRoute[i + 1][1] = roadMap[cities[i - 1]][cities[i]];
+        }
+        else
+        {
+            bestRoute[1][1] = roadMap[0][cities[0]];
+        }
+    }
 }
 
 } // namespace tsp

@@ -137,7 +137,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Computing results</string>
+          <string>Computed results</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -211,6 +211,19 @@
       </layout>
      </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="testModuleButton">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>70</y>
+      <width>80</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Test module</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

@@ -34,6 +34,8 @@ private slots:
 
 
 
+    void on_testModuleButton_clicked();
+
 private:
     void printMatrix();
 

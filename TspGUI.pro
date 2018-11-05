@@ -31,7 +31,8 @@ SOURCES += \
         tsp/BranchAndBound.cpp \
         tsp/BruteForce.cpp \
         tsp/DynamicProgramming.cpp \
-        tsp/GenericTsp.cpp
+        tsp/GenericTsp.cpp \
+    gui/TestModule.cpp
 
 HEADERS += \
         gui/mainwindow.h \
@@ -42,10 +43,12 @@ HEADERS += \
         tsp/BranchAndBound.h \
         tsp/BruteForce.h \
         tsp/DynamicProgramming.h \
-        tsp/GenericTsp.h
+        tsp/GenericTsp.h \
+    gui/TestModule.h
 
 FORMS += \
-        gui/mainwindow.ui
+        gui/mainwindow.ui \
+    gui/TestModule.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

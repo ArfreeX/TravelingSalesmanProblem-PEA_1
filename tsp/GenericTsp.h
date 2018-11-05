@@ -17,8 +17,6 @@ public:
 
     int getDistanceBetween(unsigned source, unsigned destination);
 
-    bool checkIfVisited(unsigned city);
-
     std::string resultToString();
 
     virtual void computeBestRoute() = 0;
@@ -28,8 +26,8 @@ public:
 protected:
     std::vector<std::vector<int>> roadMap;
     std::vector<std::vector<int>> bestRoute;
-    std::vector<bool> visitedCities;
-    int routeWeight = INT_MAX;
+    int minRouteWeight = INT_MAX;
+    const int STARTING_CITY = 0;
 };
 
 } // namespace tsp

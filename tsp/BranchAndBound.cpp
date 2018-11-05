@@ -17,9 +17,8 @@ void BranchAndBound::computeBestRoute()
     {
         bestRoute[i][0] = static_cast<int>(i);
         bestRoute[i][1] = roadMap[i][0];
-        routeWeight += roadMap[i][0];
+        minRouteWeight += roadMap[i][0];
     }
-
 }
 
 } // namespace tsp
