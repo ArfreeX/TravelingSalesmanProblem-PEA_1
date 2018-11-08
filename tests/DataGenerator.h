@@ -22,7 +22,7 @@ public:
             {
                 if(i == j)
                 {
-                    dataSet[i].emplace_back(INT_MAX);
+                    dataSet[i].emplace_back(0);
                 }
                 else
                 {

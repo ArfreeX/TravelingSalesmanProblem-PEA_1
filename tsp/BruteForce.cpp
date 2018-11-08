@@ -20,11 +20,11 @@ BruteForce::BruteForce(std::vector<std::vector<int>> roadMap)
 
 void BruteForce::computeBestRoute()
 {
-    if(roadMap.empty())
+    if(roadMap.empty() || roadMap.size() < 2 || roadMap.size() > 15)
     {
         return;
     }
-    std::cout << "DUPA";
+
     std::vector<unsigned> tempOrderOfCities;
     unsigned long lastCity = cities.size() - 1;
     do
@@ -35,7 +35,7 @@ void BruteForce::computeBestRoute()
         {
             temporaryRoadWeight += roadMap[cities[i]][cities[i+1]];
         }
-        temporaryRoadWeight += roadMap[lastCity][0];
+        temporaryRoadWeight += roadMap[cities[lastCity]][0];
 
 
         if(temporaryRoadWeight < minRouteWeight)

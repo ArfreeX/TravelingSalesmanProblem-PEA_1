@@ -32,7 +32,8 @@ SOURCES += \
         tsp/BruteForce.cpp \
         tsp/DynamicProgramming.cpp \
         tsp/GenericTsp.cpp \
-    gui/TestModule.cpp
+    gui/TestModule.cpp \
+    tsp/BranchAndBoundLowerBound.cpp
 
 HEADERS += \
         gui/mainwindow.h \
@@ -44,7 +45,8 @@ HEADERS += \
         tsp/BruteForce.h \
         tsp/DynamicProgramming.h \
         tsp/GenericTsp.h \
-    gui/TestModule.h
+    gui/TestModule.h \
+    tsp/BranchAndBoundLowerBound.h
 
 FORMS += \
         gui/mainwindow.ui \

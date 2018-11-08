@@ -102,6 +102,16 @@ void FileStream::write(std::vector<std::vector<int>> roadMap, std::string filena
     fileWrite.close();
 }
 
+void FileStream::write(std::vector<long double> timeResults, unsigned dataSize, std::string filename)
+{
+    fileWrite.open(filename, std::ios::out);
+    fileWrite << "Number of cities: " << dataSize << std::endl;
+    for(auto & elem : timeResults)
+    {
+        fileWrite << elem << std::endl;
+    }
+    fileWrite.close();
+}
 } // namespace helpers
 
 

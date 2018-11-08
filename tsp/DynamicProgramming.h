@@ -13,16 +13,28 @@ class DynamicProgramming :
 {
 public:
     DynamicProgramming(std::vector<std::vector<int>> roadMap);
+
     ~DynamicProgramming();
+
     void computeBestRoute();
-    std::list<int> combinations(int r);
 
 private:
     void setup();
-    void combinations(int set, int at, int r, int n, std::list<int> subsets);
-    bool notIn(int elem, int subset);
-    std::vector<std::vector<int>> memo;
-    unsigned long N;
+
+    std::list<unsigned> createSubsets(unsigned r);
+    void createSubsets(unsigned set, unsigned at, unsigned r, unsigned n, std::list<unsigned> & subsets);
+
+    bool checkIfElemInSubset(unsigned elem, unsigned subset);
+
+    void findMinimalRouteWeight();
+
+    std::vector<unsigned> createOrderOfVisits();
+
+    void findOrderOfVisits(std::vector<unsigned> cities);
+
+    std::vector<std::vector<unsigned>> memo;
+    unsigned numbOfCities;
+    const unsigned ALL_VISITED;
 };
 
 } // namespace tsp
