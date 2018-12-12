@@ -29,7 +29,7 @@
       <x>930</x>
       <y>230</y>
       <width>124</width>
-      <height>121</height>
+      <height>152</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_3">
@@ -86,7 +86,22 @@
         </font>
        </property>
        <property name="text">
-        <string>B &amp;&amp; B</string>
+        <string>SA</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QRadioButton" name="boundAndBranchTwo_2">
+       <property name="font">
+        <font>
+         <family>Source Code Pro</family>
+         <pointsize>12</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>TS</string>
        </property>
       </widget>
      </item>
@@ -223,6 +238,35 @@
     </property>
     <property name="text">
      <string>Test module</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_3">
+    <property name="geometry">
+     <rect>
+      <x>930</x>
+      <y>490</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>0</number>
+    </property>
+    <property name="maximum">
+     <number>1000</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>930</x>
+      <y>460</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Time limit (sec)</string>
     </property>
    </widget>
   </widget>

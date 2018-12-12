@@ -57,6 +57,7 @@ std::vector<std::vector<int>> FileStream::readData()
     {
         std::cout << "File error - READ NUMBER OF CITIES" << std::endl;
         fileRead.close();
+        return roadMap;
     }
 
     if (numberOfCities <= 0)

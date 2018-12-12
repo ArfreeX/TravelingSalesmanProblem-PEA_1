@@ -3,10 +3,9 @@
 namespace tsp
 {
 
-GenericTsp::GenericTsp(std::vector<std::vector<int>> roadMap)
+GenericTsp::GenericTsp(std::vector<std::vector<int>> providedRoadMap)
+    : roadMap(providedRoadMap)
 {
-    this->roadMap = roadMap;
-
     if(!roadMap.size())
     {
         return;

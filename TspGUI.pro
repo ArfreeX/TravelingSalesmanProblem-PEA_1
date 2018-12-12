@@ -33,7 +33,9 @@ SOURCES += \
         tsp/DynamicProgramming.cpp \
         tsp/GenericTsp.cpp \
     gui/TestModule.cpp \
-    tsp/BranchAndBoundLowerBound.cpp
+    tsp/TabuSearch.cpp \
+    tsp/SimulatedAnnealing.cpp \
+    tsp/TabuList.cpp
 
 HEADERS += \
         gui/mainwindow.h \
@@ -46,7 +48,9 @@ HEADERS += \
         tsp/DynamicProgramming.h \
         tsp/GenericTsp.h \
     gui/TestModule.h \
-    tsp/BranchAndBoundLowerBound.h
+    tsp/TabuSearch.h \
+    tsp/SimulatedAnnealing.h \
+    tsp/TabuList.h
 
 FORMS += \
         gui/mainwindow.ui \

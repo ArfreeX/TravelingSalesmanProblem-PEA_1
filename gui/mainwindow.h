@@ -36,6 +36,10 @@ private slots:
 
     void on_testModuleButton_clicked();
 
+    void on_spinBox_3_valueChanged(int arg1);
+
+    void on_boundAndBranchTwo_2_clicked();
+
 private:
     void printMatrix();
 
@@ -44,13 +48,15 @@ private:
     Ui::MainWindow *ui;
     helpers::FileStream file;
     std::vector<std::vector<int>> roadMap;
+    long long int timeLimit;
 
     enum class Algorithm
     {
         bruteForce,
         dynamicProgramming,
-        boundAndBranch1,
-        boundAndBranch2,
+        boundAndBranch,
+        simulatedAnnealing,
+        tabuSearch,
         unchecked
     };
     std::unique_ptr<tsp::GenericTsp> tspSolver;

@@ -13,7 +13,7 @@ namespace tsp
 class GenericTsp
 {
 public:
-    GenericTsp(std::vector<std::vector<int>> roadMap);
+    GenericTsp(std::vector<std::vector<int>> providedRoadMap);
 
     int getDistanceBetween(unsigned source, unsigned destination);
 

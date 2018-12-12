@@ -137,29 +137,27 @@ int BranchAndBound::calculateCost(std::vector<std::vector<int>> & reducedMatrix)
     return cost;
 }
 
-void BranchAndBound::cleanQueue(int level)
-{
-    std::vector<Node*> temp;
-    while(!livingNodes.empty())
-    {
-        temp.emplace_back(livingNodes.top());
-        livingNodes.pop();
-    }
+//void BranchAndBound::cleanQueue(int level)
+//{
+//    std::vector<Node*> temp;
+//    while(!livingNodes.empty())
+//    {
+//        temp.emplace_back(livingNodes.top());
+//        livingNodes.pop();
+//    }
 
-    for(int i = 0; i < temp.size(); i++)
-    {
-        if( temp[i]->level < level - 3 )
-        {
-            delete temp[i];
-        }
-        else
-        {
-            livingNodes.push(temp[i]);
-        }
-    }
-
-
-}
+//    for(int i = 0; i < temp.size(); i++)
+//    {
+//        if( temp[i]->level < level - 5 )
+//        {
+//            delete temp[i];
+//        }
+//        else
+//        {
+//            livingNodes.push(temp[i]);
+//        }
+//    }
+//}
 
 int BranchAndBound::solve(std::vector<std::vector<int>> & costMatrix)
 {
@@ -173,7 +171,7 @@ int BranchAndBound::solve(std::vector<std::vector<int>> & costMatrix)
     {
         Node* min = livingNodes.top();
         livingNodes.pop();
-        cleanQueue(min->level);
+        //cleanQueue(min->level);
         int currentCity = min->currentCity;
 
         if (min->level == numberOfCities - 1)

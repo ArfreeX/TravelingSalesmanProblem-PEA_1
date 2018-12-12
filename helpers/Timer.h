@@ -27,6 +27,7 @@ public:
      {
          return static_cast<long double>(time)/1000000;
      }
+
 private:
      Clock::time_point beginning;
 };

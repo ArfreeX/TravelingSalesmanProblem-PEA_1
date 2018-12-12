@@ -262,7 +262,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>410</x>
@@ -296,7 +296,14 @@
     <item row="3" column="0">
      <widget class="QCheckBox" name="checkBox_4">
       <property name="text">
-       <string>B &amp;&amp; B</string>
+       <string>SA</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QCheckBox" name="checkBox_5">
+      <property name="text">
+       <string>TS</string>
       </property>
      </widget>
     </item>

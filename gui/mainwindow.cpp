@@ -2,15 +2,18 @@
 #include <QMessageBox>
 
 #include "mainwindow.h"
+#include "tsp/BranchAndBound.h"
 #include "tsp/BruteForce.h"
 #include "tsp/DynamicProgramming.h"
-#include "tsp/BranchAndBound.h"
+#include "tsp/SimulatedAnnealing.h"
+#include "tsp/TabuSearch.h"
 #include "ui_mainwindow.h"
 #include "gui/TestModule.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    timeLimit(0)
 {
     ui->setupUi(this);
 }
@@ -78,12 +81,17 @@ void MainWindow::on_dynamicProgramming_clicked()
 
 void MainWindow::on_boundAndBranchOne_clicked()
 {
-    selectedAlgorithm = Algorithm::boundAndBranch1;
+    selectedAlgorithm = Algorithm::boundAndBranch;
 }
 
 void MainWindow::on_boundAndBranchTwo_clicked()
 {
-    selectedAlgorithm = Algorithm::boundAndBranch2;
+    selectedAlgorithm = Algorithm::simulatedAnnealing;
+}
+
+void MainWindow::on_boundAndBranchTwo_2_clicked()
+{
+   selectedAlgorithm = Algorithm::tabuSearch;
 }
 
 void MainWindow::on_runButton_clicked()
@@ -104,12 +112,16 @@ void MainWindow::on_runButton_clicked()
             tspSolver = std::make_unique<tsp::DynamicProgramming>(roadMap);
             break;
 
-        case Algorithm::boundAndBranch1:
+        case Algorithm::boundAndBranch:
             tspSolver = std::make_unique<tsp::BranchAndBound>(roadMap);
             break;
 
-        case Algorithm::boundAndBranch2:
-            tspSolver = std::make_unique<tsp::BranchAndBound>(roadMap);
+        case Algorithm::simulatedAnnealing:
+            tspSolver = std::make_unique<tsp::SimulatedAnnealing>(roadMap, 0);
+            break;
+
+        case Algorithm::tabuSearch:
+            tspSolver = std::make_unique<tsp::TabuSearch>(roadMap, timeLimit);
             break;
 
         case Algorithm::unchecked:
@@ -136,4 +148,9 @@ void MainWindow::on_testModuleButton_clicked()
     TestModule d;
     d.show();
     d.exec();
+}
+
+void MainWindow::on_spinBox_3_valueChanged(int arg1)
+{
+    timeLimit  = 1000000000 * static_cast<unsigned long long>(arg1);
 }
