@@ -10,10 +10,12 @@
 namespace tsp
 {
 
-SimulatedAnnealing::SimulatedAnnealing(std::vector<std::vector<int>> roadMap, long long int timeLimit)
+SimulatedAnnealing::SimulatedAnnealing(std::vector<std::vector<int>> roadMap, long long int timeLimit,
+                                       tsp::SimulatedAnnealing::NeighbourhoodMove tspNeighbourhoodStrategy)
     : GenericTsp (roadMap),
       timeLimit(timeLimit),
-      numbOfCities(roadMap.size())
+      numbOfCities(roadMap.size()),
+      tspNeighbourhoodStrategy(tspNeighbourhoodStrategy)
 {
 
 }
@@ -30,8 +32,7 @@ void SimulatedAnnealing::computeBestRoute()
     std::random_device randomGenerator;
     std::mt19937 gen(randomGenerator());
     std::uniform_real_distribution<> distribution(0.0, 1.0);
-    std::vector<int> processingSolution;
-    setupFirstSolution(processingSolution);
+    setupFirstSolution();
     double delta;
     double cooling = 0.9997;
     double temperature = 20;
@@ -46,7 +47,20 @@ void SimulatedAnnealing::computeBestRoute()
     while (temperature > STOP_TEMP && timer.elapsedSec() < timeLimit)
     {
         notChanged++;
-        nextSolution = swapTwoCities(processingSolution);
+
+        switch(tspNeighbourhoodStrategy)
+        {
+            case NeighbourhoodMove::SWAP:
+                nextSolution = swapTwoCities(processingSolution);
+                break;
+            case NeighbourhoodMove::INSERT:
+                nextSolution = randomlyInsertCity(processingSolution);
+                break;
+            case NeighbourhoodMove::INVERT:
+                nextSolution = invertSubsolution(processingSolution);
+                break;
+        }
+
 
         delta = calculateDelta(processingSolution, nextSolution);
         if (delta <= 0 || (distribution(gen) < std::exp(-delta / temperature)))
@@ -121,6 +135,27 @@ std::vector<int> SimulatedAnnealing::swapTwoCities(std::vector<int> solution)
     return newSolution;
 }
 
+std::vector<int> SimulatedAnnealing::randomlyInsertCity(std::vector<int> solution)
+{
+    auto newSolution = solution;
+    size_t first, second;
+    std::random_device randomGenerator;
+    std::uniform_int_distribution<int> firstDist(1, solution.size() - 2);
+    std::uniform_int_distribution<int> secondDist(1, solution.size() - 3);
+
+    first = firstDist(randomGenerator);
+    second = secondDist(randomGenerator);
+    if (first <= second)
+    {
+        ++second;
+    }
+    auto element = *(solution.begin() + first);
+    solution.erase(solution.begin() + first);
+    solution.insert(solution.begin() + second, element);
+
+    return newSolution;
+}
+
 std::vector<int> SimulatedAnnealing::invertSubsolution(std::vector<int> solution)
 {
     auto newSolution = solution;
@@ -147,7 +182,7 @@ std::vector<int> SimulatedAnnealing::invertSubsolution(std::vector<int> solution
     return newSolution;
 }
 
-void SimulatedAnnealing::setupFirstSolution(std::vector<int>& firstSolution)
+void SimulatedAnnealing::setupFirstSolution()
 {
     std::vector<bool> visitedCities(numbOfCities);
     struct {
@@ -160,11 +195,11 @@ void SimulatedAnnealing::setupFirstSolution(std::vector<int>& firstSolution)
         visitedCities[i] = false;
     }
 
-    firstSolution.push_back(0);
+    processingSolution.push_back(0);
     visitedCities[0] = true;
     int lastCity = 0;
 
-    while(firstSolution.size() != numbOfCities){
+    while(processingSolution.size() != numbOfCities){
         nextPotentialCity.weight = INT_MAX;
         for(int i = 0 ; i < numbOfCities; i++)
         {
@@ -176,9 +211,9 @@ void SimulatedAnnealing::setupFirstSolution(std::vector<int>& firstSolution)
         }
         lastCity = nextPotentialCity.city;
         visitedCities[nextPotentialCity.city] = true;
-        firstSolution.push_back(nextPotentialCity.city);
+        processingSolution.push_back(nextPotentialCity.city);
     }
-    firstSolution.push_back(firstSolution[0]);
+    processingSolution.push_back(processingSolution[0]);
 }
 
 void SimulatedAnnealing::assignRoute(std::vector<int> bestSolution)

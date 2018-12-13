@@ -117,11 +117,29 @@ void MainWindow::on_runButton_clicked()
             break;
 
         case Algorithm::simulatedAnnealing:
-            tspSolver = std::make_unique<tsp::SimulatedAnnealing>(roadMap, timeLimit);
+        {
+            if(neighbourhoodStrategy == tsp::SimulatedAnnealing::NeighbourhoodMove::UNCHECKED)
+            {
+                tspSolver = nullptr;
+            }
+            else
+            {
+                tspSolver = std::make_unique<tsp::SimulatedAnnealing>(roadMap, timeLimit, neighbourhoodStrategy);
+            }
+        }
             break;
 
         case Algorithm::tabuSearch:
-            tspSolver = std::make_unique<tsp::TabuSearch>(roadMap, timeLimit);
+        {
+            if(neighbourhoodStrategy == tsp::SimulatedAnnealing::NeighbourhoodMove::UNCHECKED)
+            {
+                tspSolver = nullptr;
+            }
+            else
+            {
+                tspSolver = std::make_unique<tsp::TabuSearch>(roadMap, timeLimit, neighbourhoodStrategy);
+            }
+        }
             break;
 
         case Algorithm::unchecked:
@@ -152,4 +170,19 @@ void MainWindow::on_testModuleButton_clicked()
 void MainWindow::on_spinBox_3_valueChanged(int arg1)
 {
     timeLimit  = static_cast<unsigned long long>(arg1);
+}
+
+void MainWindow::on_bruteForce_2_clicked()
+{
+    neighbourhoodStrategy = tsp::SimulatedAnnealing::NeighbourhoodMove::SWAP;
+}
+
+void MainWindow::on_dynamicProgramming_2_clicked()
+{
+    neighbourhoodStrategy = tsp::SimulatedAnnealing::NeighbourhoodMove::INSERT;
+}
+
+void MainWindow::on_boundAndBranchOne_2_clicked()
+{
+    neighbourhoodStrategy = tsp::SimulatedAnnealing::NeighbourhoodMove::INVERT;
 }

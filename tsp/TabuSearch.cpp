@@ -3,14 +3,17 @@
 #include <algorithm>
 #include "helpers/RandomNumberGenerator.h"
 
+
 namespace tsp
 {
 
-TabuSearch::TabuSearch(std::vector<std::vector<int>> roadMap, long long int timeLimit)
+TabuSearch::TabuSearch(std::vector<std::vector<int>> roadMap, long long int timeLimit,
+                       tsp::SimulatedAnnealing::NeighbourhoodMove tspNeighbourhoodStrategy)
     : GenericTsp (roadMap),
       tabuList(roadMap.size()),
       timeLimit(timeLimit),
-      numbOfCities(roadMap.size())
+      numbOfCities(roadMap.size()),
+      tspNeighbourhoodStrategy(tspNeighbourhoodStrategy)
 {
     setupFirstSolution();
 }
@@ -26,43 +29,40 @@ void TabuSearch::computeBestRoute()
     timer.start();
     minRouteWeight = calculateDistance(processingSolution);
     currentBestSolution = processingSolution;
-    std::vector<int> firstSolution = processingSolution;
-    std::vector<int> previousSolution = processingSolution;
+    auto nextSolution = processingSolution;
     int nothingChanged = 0;
+    int currentBestWeight = minRouteWeight;
     while(timer.elapsedSec() < timeLimit)
     {
         nothingChanged++;
-        int index, index2, indexPenalty = 0, index2Penalty = 0;
-        do {
-            index = rand() % (currentBestSolution.size() - 2) + 1;
-            index2 = rand() % (currentBestSolution.size() - 2) + 1;
-        }while(index == index2);
-
-
-        std::swap(processingSolution[index], processingSolution[index2]);
-
-        int processingCost = calculateDistance(processingSolution);
-
-        if(processingCost < minRouteWeight)
+        switch(tspNeighbourhoodStrategy)
         {
-            minRouteWeight = processingCost;
-            currentBestSolution = processingSolution;
-            indexPenalty = index;
-            index2Penalty = index2;
-            nothingChanged = 0;
+            case tsp::SimulatedAnnealing::NeighbourhoodMove::SWAP:
+                nextSolution = swapTwoCities(processingSolution);
+                break;
+            case tsp::SimulatedAnnealing::NeighbourhoodMove::INSERT:
+                nextSolution = randomlyInsertCity(processingSolution);
+                break;
+            case tsp::SimulatedAnnealing::NeighbourhoodMove::INVERT:
+                nextSolution = invertSubsolution(processingSolution);
+                break;
         }
-
+        int nextSolCost = calculateDistance(nextSolution);
+        int currentBestWeight = calculateDistance(processingSolution);
+        if((nextSolCost < currentBestWeight) && !tabuList.isPenalized(indexCity, indexCity2))
+        {
+            processingSolution = nextSolution;
+            currentBestWeight = nextSolCost;
+            minRouteWeight = nextSolCost;
+            currentBestSolution = processingSolution;
+            nothingChanged = 0;
+            tabuList.penalize(indexCity, indexCity2);
+        }
+        tabuList.decrement();
         if(nothingChanged % 2000 == 0)
         {
             processingSolution = invertSubsolution(processingSolution);
         }
-
-        if(indexPenalty)
-        {
-            tabuList.penalize(indexPenalty, index2Penalty);
-            tabuList.decrement();
-        }
-
     }
     assignRoute(currentBestSolution);
 }
@@ -111,7 +111,31 @@ void TabuSearch::setupFirstSolution()
     processingSolution.push_back(processingSolution[0]);
 }
 
-std::vector<int> TabuSearch::invertSubsolution(std::vector<int> solution)
+std::vector<int> TabuSearch::swapTwoCities(std::vector<int> solution)
+{
+    auto newSolution = solution;
+    size_t first, second;
+    std::random_device randomGenerator;
+    std::uniform_int_distribution<int> firstDist(1, solution.size() - 2);
+    std::uniform_int_distribution<int> secondDist(1, solution.size() - 3);
+
+    first = firstDist(randomGenerator);
+    second = secondDist(randomGenerator);
+    if (first < second)
+    {
+        ++second;
+    }
+    if (first == second )
+    {
+        ++second;
+    }
+    std::swap(newSolution[first], newSolution[second]);
+    indexCity = first;
+    indexCity2 = second;
+    return newSolution;
+}
+
+std::vector<int> TabuSearch::randomlyInsertCity(std::vector<int> solution)
 {
     auto newSolution = solution;
     size_t first, second;
@@ -125,11 +149,38 @@ std::vector<int> TabuSearch::invertSubsolution(std::vector<int> solution)
     {
         ++second;
     }
+    auto element = *(solution.begin() + first);
+    solution.erase(solution.begin() + first);
+    solution.insert(solution.begin() + second, element);
+    indexCity = first;
+    indexCity2 = second;
+    return newSolution;
+}
+
+std::vector<int> TabuSearch::invertSubsolution(std::vector<int> solution)
+{
+    auto newSolution = solution;
+    size_t first, second;
+    std::random_device randomGenerator;
+    std::uniform_int_distribution<int> firstDist(1, solution.size() - 2);
+    std::uniform_int_distribution<int> secondDist(1, solution.size() - 3);
+
+    first = firstDist(randomGenerator);
+    second = secondDist(randomGenerator);
+    if (first < second)
+    {
+        ++second;
+    }
+    if (first == second)
+    {
+        ++second;
+    }
     if (first < second)
         std::reverse(solution.begin() + first, solution.begin() + second);
     else
         std::reverse(solution.begin() + second, solution.begin() + first);
-
+    indexCity = first;
+    indexCity2 = second;
     return newSolution;
 }
 

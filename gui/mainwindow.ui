@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>686</width>
-    <height>408</height>
+    <width>854</width>
+    <height>402</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -243,8 +243,8 @@
    <widget class="QSpinBox" name="spinBox_3">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>230</y>
+      <x>710</x>
+      <y>160</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -259,8 +259,8 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>200</y>
+      <x>710</x>
+      <y>140</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -269,13 +269,80 @@
      <string>Time limit (sec)</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>10</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Neighbourhood strategy</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>40</y>
+      <width>124</width>
+      <height>90</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_6">
+     <item row="2" column="0">
+      <widget class="QRadioButton" name="boundAndBranchOne_2">
+       <property name="font">
+        <font>
+         <family>Source Code Pro</family>
+         <pointsize>12</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string notr="true">Insert</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QRadioButton" name="bruteForce_2">
+       <property name="font">
+        <font>
+         <family>Source Code Pro</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Swap</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QRadioButton" name="dynamicProgramming_2">
+       <property name="font">
+        <font>
+         <family>Source Code Pro</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Invert</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>686</width>
+     <width>854</width>
      <height>19</height>
     </rect>
    </property>

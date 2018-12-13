@@ -13,7 +13,17 @@ class SimulatedAnnealing :
     public GenericTsp
 {
 public:
-    SimulatedAnnealing(std::vector<std::vector<int>> roadMap, long long int timeLimit);
+    enum NeighbourhoodMove: uint8_t
+    {
+        INSERT,
+        SWAP,
+        INVERT,
+        UNCHECKED
+    };
+    tsp::SimulatedAnnealing::NeighbourhoodMove tspNeighbourhoodStrategy;
+
+    SimulatedAnnealing(std::vector<std::vector<int>> roadMap, long long int timeLimit,
+                       tsp::SimulatedAnnealing::NeighbourhoodMove tspNeighbourhoodStrategy);
 
     ~SimulatedAnnealing();
 
@@ -26,20 +36,17 @@ private:
 
     std::vector<int> invertSubsolution(std::vector<int> solution);
 
-    void setupFirstSolution(std::vector<int>& firstSolution);
+    void setupFirstSolution();
 
     void assignRoute(std::vector<int>);
 
     std::vector<int> swapTwoCities(std::vector<int> solution);
 
-    enum NeighbourhoodMove: uint8_t
-    {
-        INSERT,
-        SWAP,
-        INVERT
-    };
+    std::vector<int> randomlyInsertCity(std::vector<int> solution);
+
     unsigned numbOfCities;
     long long int timeLimit;
+    std::vector<int> processingSolution;
 };
 
 } // namespace tsp

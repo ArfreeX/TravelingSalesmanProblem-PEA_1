@@ -6,6 +6,7 @@
 #include "helpers/FileStream.h"
 #include "helpers/Timer.h"
 #include "tsp/GenericTsp.h"
+#include "tsp/SimulatedAnnealing.h"
 
 namespace Ui {
 class MainWindow;
@@ -40,6 +41,12 @@ private slots:
 
     void on_boundAndBranchTwo_2_clicked();
 
+    void on_bruteForce_2_clicked();
+
+    void on_dynamicProgramming_2_clicked();
+
+    void on_boundAndBranchOne_2_clicked();
+
 private:
     void printMatrix();
 
@@ -61,6 +68,8 @@ private:
     };
     std::unique_ptr<tsp::GenericTsp> tspSolver;
     Algorithm selectedAlgorithm = Algorithm::unchecked;
+    tsp::SimulatedAnnealing::NeighbourhoodMove neighbourhoodStrategy =
+            tsp::SimulatedAnnealing::NeighbourhoodMove::UNCHECKED;
     helpers::Timer timer;
 };
 
