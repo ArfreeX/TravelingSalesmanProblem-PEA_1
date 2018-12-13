@@ -55,6 +55,7 @@ private:
     Ui::MainWindow *ui;
     helpers::FileStream file;
     std::vector<std::vector<int>> roadMap;
+    std::vector<std::vector<int>> notSorted;
     long long int timeLimit;
 
     enum class Algorithm

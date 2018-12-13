@@ -15,14 +15,14 @@ TabuList::TabuList(int size)
 
 void TabuList::penalize(int srcCity, int dstCity)
 {
-    int penalty = helpers::RandomNumberGenerator(tabuList.size()*10).drawNumber() + 1;
+    int penalty = helpers::RandomNumberGenerator(tabuList.size()/2).drawNumber() + 1;
     tabuList[srcCity][dstCity] += penalty;
     tabuList[dstCity][srcCity] += penalty;
 }
 
 bool TabuList::isPenalized(int srcCity, int dstCity)
 {
-    return tabuList[srcCity][dstCity];
+    return tabuList[srcCity][dstCity] || tabuList[srcCity][dstCity];
 }
 
 void TabuList::reset()

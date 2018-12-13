@@ -47,20 +47,33 @@ void TabuSearch::computeBestRoute()
                 nextSolution = invertSubsolution(processingSolution);
                 break;
         }
-        int nextSolCost = calculateDistance(nextSolution);
+
         int currentBestWeight = calculateDistance(processingSolution);
-        if((nextSolCost < currentBestWeight) && !tabuList.isPenalized(indexCity, indexCity2))
+        int nextSolCost = calculateDistance(nextSolution);
+
+        if(!tabuList.isPenalized(indexCity, indexCity2))
         {
             processingSolution = nextSolution;
-            currentBestWeight = nextSolCost;
-            minRouteWeight = nextSolCost;
-            currentBestSolution = processingSolution;
-            nothingChanged = 0;
             tabuList.penalize(indexCity, indexCity2);
+            if(nextSolCost < currentBestWeight)
+            {
+                currentBestWeight = nextSolCost;
+                if(minRouteWeight > currentBestWeight)
+                {
+                    minRouteWeight = nextSolCost;
+                    currentBestSolution = processingSolution;
+                }
+                nothingChanged = 0;
+            }
         }
+
         tabuList.decrement();
-        if(nothingChanged % 2000 == 0)
+        if(nothingChanged % 20000 == 0)
         {
+            std::next_permutation(processingSolution.begin(), processingSolution.end());
+            std::next_permutation(processingSolution.begin(), processingSolution.end());
+            std::next_permutation(processingSolution.begin(), processingSolution.end());
+            std::next_permutation(processingSolution.begin(), processingSolution.end());
             processingSolution = invertSubsolution(processingSolution);
         }
     }

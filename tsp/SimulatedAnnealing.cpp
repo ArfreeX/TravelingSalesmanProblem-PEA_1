@@ -35,7 +35,7 @@ void SimulatedAnnealing::computeBestRoute()
     setupFirstSolution();
     double delta;
     double cooling = 0.9997;
-    double temperature = 20;
+    double temperature = 1000;
     const double STOP_TEMP = 1.00E-05;
     size_t notChanged = 0;
     std::vector<int> bestSolution(processingSolution);

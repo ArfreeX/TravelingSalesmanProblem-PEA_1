@@ -38,6 +38,7 @@ void MainWindow::on_pushButton_clicked()
     {
     roadMap = file.readData();
     }
+    notSorted = roadMap;
     printMatrix();
 }
 
@@ -101,6 +102,8 @@ void MainWindow::on_runButton_clicked()
         printResult("Please load data first");
         return;
     }
+
+    roadMap = notSorted;
 
     switch(selectedAlgorithm)
     {
