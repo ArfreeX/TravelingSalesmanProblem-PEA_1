@@ -10,9 +10,9 @@ class TabuList
 public:
     TabuList(int size);
 
-    void addPenalty(int srcCity, int dstCity);
+    void penalize(int srcCity, int dstCity);
 
-    bool checkPenalty(int srcCity, int dstCity);
+    bool isPenalized(int srcCity, int dstCity);
 
     void reset();
 

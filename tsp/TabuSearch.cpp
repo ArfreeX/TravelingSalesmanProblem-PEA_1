@@ -1,29 +1,18 @@
 #include "TabuSearch.h"
-
+#include "helpers/Timer.h"
+#include <algorithm>
+#include "helpers/RandomNumberGenerator.h"
 
 namespace tsp
 {
 
 TabuSearch::TabuSearch(std::vector<std::vector<int>> roadMap, long long int timeLimit)
     : GenericTsp (roadMap),
+      tabuList(roadMap.size()),
       timeLimit(timeLimit),
       numbOfCities(roadMap.size())
 {
-    if(!roadMap.size())
-    {
-        return;
-    }
-
-    tabuList = std::vector<std::vector<int>>(numbOfCities);
-    for(unsigned i = 0 ; i < numbOfCities; i++)
-    {
-        tabuList[i].resize(numbOfCities);
-    }
-    resetTabuList();
-    numberOfIterations = numbOfCities * 100;
-    setupCurrentSolution();
-    setupBestSolution();
-
+    setupFirstSolution();
 }
 
 TabuSearch::~TabuSearch()
@@ -31,78 +20,117 @@ TabuSearch::~TabuSearch()
 
 }
 
-void TabuSearch::resetTabuList()
-{
-    for(int i = 0; i < tabuList.size(); i++)
-    {
-        for(int j = 0; j < tabuList.size(); j++)
-        {
-            tabuList[i][j] = 0 ;
-        }
-    }
-}
-
 void TabuSearch::computeBestRoute()
 {
-    helpers::Timer time;
-    std::vector<int> processingSolution = currSolution;
-    time.start();
-    int counter = 0;
-    int counterLoop = 0;
-    while ( time.elapsed() < timeLimit )
+    helpers::Timer timer;
+    timer.start();
+    minRouteWeight = calculateDistance(processingSolution);
+    currentBestSolution = processingSolution;
+    std::vector<int> firstSolution = processingSolution;
+    std::vector<int> previousSolution = processingSolution;
+    int nothingChanged = 0;
+    while(timer.elapsedSec() < timeLimit)
     {
-        int city1 = -1;
-        int city2 = -1;
-        currSolution = processingSolution;
-        for (int j = 1; j < currSolution.size() - 1; j++)
-        {
-            for (int k = j + 1; k < currSolution.size() - 1; k++)
-            {
-                std::swap(currSolution[j], currSolution[k]);
-                int currCost = calculateDistance(currSolution);
-                if((currCost < minRouteWeight))
-                {
-                    counter++;
-                    if(tabuList[j][k])
-                        counterLoop++;
-                }
-                if ((currCost < minRouteWeight) && tabuList[j][k])
-                {
-                    city1 = j;
-                    city2 = k;
-                    bestSolution = currSolution;
-                    minRouteWeight = currCost;
+        nothingChanged++;
+        int index, index2, indexPenalty = 0, index2Penalty = 0;
+        do {
+            index = rand() % (currentBestSolution.size() - 2) + 1;
+            index2 = rand() % (currentBestSolution.size() - 2) + 1;
+        }while(index == index2);
 
-                    helpers::RandomNumberGenerator randomizer(numbOfCities*numbOfCities);
-                    int penalty = randomizer.drawNumber();
-                    tabuList[city1][city2] = penalty;
-                    tabuList[city2][city1] = penalty;
-                }
-//                else
-//                {
-//                    currSolution = swap(j, k, currSolution);
-//                }
-            }
+
+        std::swap(processingSolution[index], processingSolution[index2]);
+
+        int processingCost = calculateDistance(processingSolution);
+
+        if(processingCost < minRouteWeight)
+        {
+            minRouteWeight = processingCost;
+            currentBestSolution = processingSolution;
+            indexPenalty = index;
+            index2Penalty = index2;
+            nothingChanged = 0;
         }
 
-       //if(city1 != -1)
-            //decrementTabu();
+        if(nothingChanged % 2000 == 0)
+        {
+            processingSolution = invertSubsolution(processingSolution);
+        }
+
+        if(indexPenalty)
+        {
+            tabuList.penalize(indexPenalty, index2Penalty);
+            tabuList.decrement();
+        }
+
     }
-    std::cout<<"Counter swap: "<< counter << " Counter loop: " << counterLoop << std::endl << std::endl;
-//    for(int i = 0; i < tabuList.size(); i++)
-//    {
-//        for(int j = 0; j < tabuList.size(); j++)
-//        {
-//            std::cout << tabuList[i][j] << " ";
-//        }
-//    }
-    assignRoute(bestSolution);
+    assignRoute(currentBestSolution);
 }
 
-void TabuSearch::setupBestSolution()
+unsigned TabuSearch::calculateDistance(std::vector<int> solution)
 {
-    bestSolution = currSolution;
-    minRouteWeight = calculateDistance(bestSolution);
+    unsigned cost = 0;
+    for (int i = 0; i < solution.size() - 1; i++)
+    {
+        cost += roadMap[solution[i]][solution[i + 1]];
+    }
+    return cost;
+}
+
+void TabuSearch::setupFirstSolution()
+{
+    std::vector<bool> visitedCities(numbOfCities);
+    struct {
+        int city;
+        int weight;
+    } nextPotentialCity;
+
+    for(int i = 0 ; i < numbOfCities; i++)
+    {
+        visitedCities[i] = false;
+    }
+
+    processingSolution.push_back(0);
+    visitedCities[0] = true;
+    int lastCity = 0;
+
+    while(processingSolution.size() != numbOfCities){
+        nextPotentialCity.weight = INT_MAX;
+        for(int i = 0 ; i < numbOfCities; i++)
+        {
+            if(!visitedCities[i] && roadMap[lastCity][i] < nextPotentialCity.weight && lastCity != i)
+            {
+                nextPotentialCity.weight = roadMap[lastCity][i];
+                nextPotentialCity.city = i;
+            }
+        }
+        lastCity = nextPotentialCity.city;
+        visitedCities[nextPotentialCity.city] = true;
+        processingSolution.push_back(nextPotentialCity.city);
+    }
+    processingSolution.push_back(processingSolution[0]);
+}
+
+std::vector<int> TabuSearch::invertSubsolution(std::vector<int> solution)
+{
+    auto newSolution = solution;
+    size_t first, second;
+    std::random_device randomGenerator;
+    std::uniform_int_distribution<int> firstDist(1, solution.size() - 2);
+    std::uniform_int_distribution<int> secondDist(1, solution.size() - 3);
+
+    first = firstDist(randomGenerator);
+    second = secondDist(randomGenerator);
+    if (first <= second)
+    {
+        ++second;
+    }
+    if (first < second)
+        std::reverse(solution.begin() + first, solution.begin() + second);
+    else
+        std::reverse(solution.begin() + second, solution.begin() + first);
+
+    return newSolution;
 }
 
 void TabuSearch::assignRoute(std::vector<int> bestSolution)
@@ -117,54 +145,5 @@ void TabuSearch::assignRoute(std::vector<int> bestSolution)
         }
     }
 }
-
-void TabuSearch::setupCurrentSolution()
-{
-    currSolution = std::vector<int>(numbOfCities + 1);
-    for (int i = 0; i < numbOfCities; i++)
-    {
-        currSolution[i] = i;
-    }
-    currSolution[numbOfCities] = 0;
-}
-
-void TabuSearch::tabuMove(int city1, int city2)
-{ //tabus the swap operatio
-    helpers::RandomNumberGenerator randomizer(numbOfCities*numbOfCities);
-    int penalty = randomizer.drawNumber();
-    tabuList[city1][city2] = penalty;
-    tabuList[city2][city1] = penalty;
-
-}
-
-void TabuSearch::decrementTabu()
-{
-    for(int i = 0; i < tabuList.size(); i++)
-    {
-        for(int j = 0; j < tabuList.size(); j++)
-        {
-            if(tabuList[i][j] > 0)
-                tabuList[i][j] = tabuList[i][j] - 1;
-        }
-    }
-}
-
-unsigned TabuSearch::calculateDistance(std::vector<int> solution)
-{
-    unsigned cost = 0;
-    for (int i = 0; i < solution.size() - 1; i++) {
-        cost += roadMap[solution[i]][solution[i + 1]];
-    }
-    return cost;
-}
-
-//std::vector<int> TabuSearch::swap(int i, int k, std::vector<int> solution)
-//{
-//    int temp = solution[i];
-//    solution[i] = solution[k];
-//    solution[k] = temp;
-
-//    return solution;
-//}
 
 } // namespace tsp

@@ -5,8 +5,9 @@
 #include <list>
 #include <queue>
 #include "GenericTsp.h"
-#include "helpers/Timer.h"
 #include "helpers/RandomNumberGenerator.h"
+#include "tsp/TabuList.h"
+
 namespace tsp
 {
 
@@ -21,29 +22,22 @@ public:
     void computeBestRoute();
 
 private:
-    void tabuMove(int city1, int city2);
-
-    void decrementTabu();
-
     unsigned calculateDistance(std::vector<int> solution);
 
-    void setupBestSolution();
-
-    void setupCurrentSolution();
-
-    std::vector<int> swap(int i, int k, std::vector<int> solution);
+    void setupFirstSolution();
 
     void assignRoute(std::vector<int>);
 
-    void resetTabuList();
+    std::vector<int> invertSubsolution(std::vector<int> solution);
 
-    std::vector<std::vector<int>> tabuList;
-    std::vector<int> currSolution;
-    std::vector<int> bestSolution;
+    std::vector<int> swapCities(std::vector<int> currentPath,int city1,int city2);
+
+    TabuList tabuList;
+    std::vector<int> processingSolution;
+    std::vector<int> currentBestSolution;
 
     unsigned numbOfCities;
     long long int timeLimit;
-
     int numberOfIterations;
 
     //int[] bestSolution; ->  std::vector<std::vector<int>> bestRoute;

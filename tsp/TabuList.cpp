@@ -13,18 +13,16 @@ TabuList::TabuList(int size)
     }
 }
 
-
-
-void TabuList::addPenalty(int srcCity, int dstCity)
+void TabuList::penalize(int srcCity, int dstCity)
 {
-    int penalty = helpers::RandomNumberGenerator(tabuList.size() * tabuList.size()).drawNumber();
+    int penalty = helpers::RandomNumberGenerator(tabuList.size()*10).drawNumber() + 1;
     tabuList[srcCity][dstCity] += penalty;
     tabuList[dstCity][srcCity] += penalty;
 }
 
-bool TabuList::checkPenalty(int srcCity, int dstCity)
+bool TabuList::isPenalized(int srcCity, int dstCity)
 {
-    return tabuList[srcCity][dstCity] || tabuList[dstCity][srcCity];
+    return tabuList[srcCity][dstCity];
 }
 
 void TabuList::reset()
@@ -40,13 +38,14 @@ void TabuList::reset()
 
 void TabuList::decrement()
 {
+
     for(auto & row : tabuList)
     {
         for(auto & element : row)
         {
             if(element)
             {
-               element--;
+                element--;
             }
         }
     }

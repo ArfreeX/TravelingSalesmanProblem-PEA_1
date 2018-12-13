@@ -23,10 +23,11 @@ public:
 
     virtual ~GenericTsp() = 0;
 
+    int minRouteWeight = INT_MAX;
 protected:
     std::vector<std::vector<int>> roadMap;
     std::vector<std::vector<int>> bestRoute;
-    int minRouteWeight = INT_MAX;
+
     const int STARTING_CITY = 0;
 };
 

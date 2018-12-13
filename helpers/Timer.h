@@ -12,6 +12,7 @@ class Timer
 public:
     typedef std::chrono::high_resolution_clock Clock;
     typedef std::chrono::nanoseconds TIME;
+    typedef std::chrono::seconds TIME_SEC;
 
      void start()
      {
@@ -21,6 +22,11 @@ public:
      long long int elapsed()
      {
          return std::chrono::duration_cast<TIME>(Clock::now() - beginning).count();
+     }
+
+     long long int elapsedSec()
+     {
+         return std::chrono::duration_cast<TIME_SEC>(Clock::now() - beginning).count();
      }
 
      long double ns_to_ms(long long int time)

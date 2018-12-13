@@ -20,8 +20,24 @@ public:
     void computeBestRoute();
 
 private:
-    int getTotalDistance(std::vector<int> actualOrder);
-    std::vector<std::vector<unsigned>> memo;
+    unsigned calculateDistance(std::vector<int> solution);
+
+    double calculateDelta(std::vector<int> currentSolution, std::vector<int> nextSolution);
+
+    std::vector<int> invertSubsolution(std::vector<int> solution);
+
+    void setupFirstSolution(std::vector<int>& firstSolution);
+
+    void assignRoute(std::vector<int>);
+
+    std::vector<int> swapTwoCities(std::vector<int> solution);
+
+    enum NeighbourhoodMove: uint8_t
+    {
+        INSERT,
+        SWAP,
+        INVERT
+    };
     unsigned numbOfCities;
     long long int timeLimit;
 };

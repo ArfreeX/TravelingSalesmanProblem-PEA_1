@@ -117,7 +117,7 @@ void MainWindow::on_runButton_clicked()
             break;
 
         case Algorithm::simulatedAnnealing:
-            tspSolver = std::make_unique<tsp::SimulatedAnnealing>(roadMap, 0);
+            tspSolver = std::make_unique<tsp::SimulatedAnnealing>(roadMap, timeLimit);
             break;
 
         case Algorithm::tabuSearch:
@@ -139,7 +139,6 @@ void MainWindow::on_runButton_clicked()
     tspSolver->computeBestRoute();
     std::string timeResult = "\nExec time: "
             + std::to_string(timer.ns_to_ms((timer.elapsed()))) + " ms";
-
     printResult(tspSolver->resultToString() + timeResult);
 }
 
@@ -152,5 +151,5 @@ void MainWindow::on_testModuleButton_clicked()
 
 void MainWindow::on_spinBox_3_valueChanged(int arg1)
 {
-    timeLimit  = 1000000000 * static_cast<unsigned long long>(arg1);
+    timeLimit  = static_cast<unsigned long long>(arg1);
 }
