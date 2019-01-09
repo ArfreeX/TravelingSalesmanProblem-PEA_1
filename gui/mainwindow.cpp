@@ -2,11 +2,12 @@
 #include <QMessageBox>
 
 #include "mainwindow.h"
+
 #include "tsp/BranchAndBound.h"
 #include "tsp/BruteForce.h"
 #include "tsp/DynamicProgramming.h"
-#include "tsp/SimulatedAnnealing.h"
 #include "tsp/TabuSearch.h"
+
 #include "ui_mainwindow.h"
 #include "gui/TestModule.h"
 
@@ -145,6 +146,21 @@ void MainWindow::on_runButton_clicked()
         }
             break;
 
+        case Algorithm::genetic:
+        {
+            if(mutatingStrategy == tsp::GeneticAlgorithm::MutatingStrategy::UNCHECKED ||
+               crossingStrategy == tsp::GeneticAlgorithm::CrossingStrategy::NONE)
+            {
+                tspSolver = nullptr;
+            }
+            else
+            {
+                tspSolver = std::make_unique<tsp::GeneticAlgorithm>(roadMap, timeLimit, mutatingStrategy, crossingStrategy, geneticPopulation,
+                                                              geneticCrossingFactor, geneticMutationFactor);
+            }
+        }
+            break;
+
         case Algorithm::unchecked:
             tspSolver = nullptr;
             break;
@@ -188,4 +204,44 @@ void MainWindow::on_dynamicProgramming_2_clicked()
 void MainWindow::on_boundAndBranchOne_2_clicked()
 {
     neighbourhoodStrategy = tsp::SimulatedAnnealing::NeighbourhoodMove::INVERT;
+}
+
+void MainWindow::on_spinBox_4_valueChanged(int arg1)
+{
+    geneticPopulation = arg1;
+}
+
+void MainWindow::on_spinBox_5_valueChanged(int arg1)
+{
+    geneticCrossingFactor = arg1;
+}
+
+void MainWindow::on_spinBox_6_valueChanged(int arg1)
+{
+    geneticMutationFactor = arg1;
+}
+
+void MainWindow::on_boundAndBranchTwo_3_clicked()
+{
+    selectedAlgorithm = Algorithm::genetic;
+}
+
+void MainWindow::on_bruteForce_3_clicked()
+{
+    mutatingStrategy = tsp::GeneticAlgorithm::MutatingStrategy::SWAP;
+}
+
+void MainWindow::on_dynamicProgramming_3_clicked()
+{
+    mutatingStrategy = tsp::GeneticAlgorithm::MutatingStrategy::INVERT;
+}
+
+void MainWindow::on_bruteForce_4_clicked()
+{
+    crossingStrategy = tsp::GeneticAlgorithm::CrossingStrategy::SUBSET;
+}
+
+void MainWindow::on_dynamicProgramming_4_clicked()
+{
+    crossingStrategy = tsp::GeneticAlgorithm::CrossingStrategy::COINFLIP;
 }

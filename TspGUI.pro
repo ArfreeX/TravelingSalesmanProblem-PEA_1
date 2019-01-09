@@ -35,7 +35,8 @@ SOURCES += \
     gui/TestModule.cpp \
     tsp/TabuSearch.cpp \
     tsp/SimulatedAnnealing.cpp \
-    tsp/TabuList.cpp
+    tsp/TabuList.cpp \
+    tsp/GeneticAlgorithm.cpp
 
 HEADERS += \
         gui/mainwindow.h \
@@ -50,7 +51,8 @@ HEADERS += \
     gui/TestModule.h \
     tsp/TabuSearch.h \
     tsp/SimulatedAnnealing.h \
-    tsp/TabuList.h
+    tsp/TabuList.h \
+    tsp/GeneticAlgorithm.h
 
 FORMS += \
         gui/mainwindow.ui \
