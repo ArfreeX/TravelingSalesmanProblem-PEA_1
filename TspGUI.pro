@@ -32,7 +32,11 @@ SOURCES += \
         tsp/BruteForce.cpp \
         tsp/DynamicProgramming.cpp \
         tsp/GenericTsp.cpp \
-    gui/TestModule.cpp
+    gui/TestModule.cpp \
+    tsp/TabuSearch.cpp \
+    tsp/SimulatedAnnealing.cpp \
+    tsp/TabuList.cpp \
+    tsp/GeneticAlgorithm.cpp
 
 HEADERS += \
         gui/mainwindow.h \
@@ -44,7 +48,11 @@ HEADERS += \
         tsp/BruteForce.h \
         tsp/DynamicProgramming.h \
         tsp/GenericTsp.h \
-    gui/TestModule.h
+    gui/TestModule.h \
+    tsp/TabuSearch.h \
+    tsp/SimulatedAnnealing.h \
+    tsp/TabuList.h \
+    tsp/GeneticAlgorithm.h
 
 FORMS += \
         gui/mainwindow.ui \

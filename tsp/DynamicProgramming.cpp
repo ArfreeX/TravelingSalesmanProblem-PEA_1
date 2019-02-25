@@ -4,83 +4,44 @@ namespace tsp
 {
 
 DynamicProgramming::DynamicProgramming(std::vector<std::vector<int>> roadMap)
-    : GenericTsp(roadMap)
+    : GenericTsp(roadMap),
+      ALL_VISITED((1 << roadMap.size()) - 1)
 {
-    N = roadMap.size();
-    memo.resize(N);
+    if(roadMap.empty() || roadMap.size() > 25)
+    {
+        return;
+    }
+
+    numbOfCities = roadMap.size();
+    memo.resize(numbOfCities);
     for(auto & line : memo)
     {
-        line.resize(1 << N);
+        line.resize(1 << numbOfCities);
+        std::fill(line.begin(), line.end(), INT_MAX);
     }
 };
 
 DynamicProgramming::~DynamicProgramming()
 {};
 
-void DynamicProgramming::computeBestRoute()
+void DynamicProgramming::setup()
 {
-    const int END_STATE = (1 << N) - 1;
-    setup();
-
-    for(int r = 3; r <= N; r++)
+    for (unsigned i = 1; i < numbOfCities; i++)
     {
-        for(auto & subset : combinations(r))
-        {
-            if(notIn(0,subset)) continue;
-            for(int next = 0; next < N; next++)
-            {
-                if(next == 0 || notIn(next, subset)) continue;
-                int subsetWithoutNext = subset ^ (1 << next);
-                int minDist = INT_MAX;
-                for(int end = 0; end < N; end++)
-                {
-                    if(end == 0 || end == next || notIn(end, subset)) continue;
-                    int newDistance = memo[end][subsetWithoutNext] + roadMap[end][next];
-                    if(newDistance  < minDist)
-                    {
-                        minDist = newDistance;
-                    }
-                }
-                memo[next][subset] = minDist;
-            }
-        }
+      memo[i][1 | (1 << i)] = roadMap[0][i];
     }
-
-    for (int i = 1; i < N; i++)
+}
+void DynamicProgramming::findMinimalRouteWeight()
+{
+    minRouteWeight = 0;
+    for(auto & route : bestRoute)
     {
-        int tourCost = memo[i][END_STATE] + roadMap[i][0];
-        if(tourCost < minRouteWeight)
-        {
-            minRouteWeight = tourCost;
-        }
+        minRouteWeight += route[1];
     }
-    std::vector<int> cities;
-    int lastIndex = 0;
-    int state = END_STATE;
-    cities.emplace_back(0);
+}
 
-    for ( int i = 1; i < N; i++)
-    {
-        int index = -1;
-        for( int j = 0 ; j < N; j++)
-        {
-            if ( j == 0 || notIn(j, state)) continue;
-            if ( index == -1) index = j;
-            int prevDist = memo[index][state] + roadMap[index][lastIndex];
-            int newDist = memo[j][state] + roadMap[j][lastIndex];
-            if ( newDist < prevDist)
-            {
-                index = j;
-            }
-        }
-        cities.emplace_back(index);
-        state = state ^ ( 1 << index);
-        lastIndex = index;
-    }
-
-    cities.emplace_back(0);
-    std::reverse(cities.begin(), cities.end());
-
+void DynamicProgramming::findOrderOfVisits(std::vector<unsigned> cities)
+{
     for(unsigned i = 0; i < cities.size(); i++)
     {
         bestRoute[i][0] = cities[i];
@@ -94,35 +55,105 @@ void DynamicProgramming::computeBestRoute()
             bestRoute[0][1] = 0;
         }
     }
-    minRouteWeight = 0;
-    for(auto & route : bestRoute)
+}
+
+std::vector<unsigned> DynamicProgramming::createOrderOfVisits()
+{
+    std::vector<unsigned> cities;
+    unsigned lastCityIndex = 0;
+    unsigned visited = ALL_VISITED;
+    cities.emplace_back(0);
+    for ( unsigned i = 1; i < numbOfCities; i++)
     {
-        minRouteWeight += route[1];
+        unsigned cityIndex = INT_MAX;
+        for( unsigned j = 1 ; j < numbOfCities; j++)
+        {
+            if (checkIfElemInSubset(j, visited))
+            {
+                if ( cityIndex == INT_MAX)
+                {
+                    cityIndex = j;
+                }
+
+                int prevDist = memo[cityIndex][visited] + roadMap[cityIndex][lastCityIndex];
+                int newDist = memo[j][visited] + roadMap[j][lastCityIndex];
+                if ( newDist < prevDist)
+                {
+                    cityIndex = j;
+                }
+            }
+        }
+        cities.emplace_back(cityIndex);
+        visited = visited ^ ( 1 << cityIndex);
+        lastCityIndex = cityIndex;
+    }
+    cities.emplace_back(0);
+    std::reverse(cities.begin(), cities.end());
+
+    return cities;
+}
+
+void DynamicProgramming::computeBestRoute()
+{
+    if(roadMap.empty() || roadMap.size() > 25)
+    {
+        return;
     }
 
-}
+    setup();
 
-bool DynamicProgramming::notIn(int elem, int subset)
-{
-  return ((1 << elem) & subset) == 0;
-}
-
-void DynamicProgramming::setup()
-{
-    for(int i = 1; i < N; i++)
+    for(unsigned subsetSize = 3; subsetSize <= numbOfCities; subsetSize++)
     {
-        memo[i][(1 << 0) | (1 << i)] = roadMap[0][i];
+        for(auto & subset : createSubsets(subsetSize))
+        {
+            if(checkIfElemInSubset(0,subset))
+            {
+                for(unsigned nextNode = 1; nextNode < numbOfCities; nextNode++)
+                {
+                    if(checkIfElemInSubset(nextNode, subset))
+                    {
+                        unsigned subsetWithoutNextNode = subset ^ (1 << nextNode);
+
+                        minRouteWeight = INT_MAX;
+                        for(unsigned endNode = 1; endNode < numbOfCities; endNode++)
+                        {
+                            if(endNode != nextNode && checkIfElemInSubset(endNode, subset))
+                            {
+                                unsigned routeWeightThroughCurrentSubset = memo[endNode][subsetWithoutNextNode]
+                                                                                + roadMap[endNode][nextNode];
+                                if(routeWeightThroughCurrentSubset  < minRouteWeight)
+                                {
+                                    minRouteWeight = routeWeightThroughCurrentSubset;
+                                }
+                            }
+                        }
+                        memo[nextNode][subset] = minRouteWeight;
+                    }
+                }
+            }
+        }
     }
+
+    auto cities = createOrderOfVisits();
+
+    findOrderOfVisits(cities);
+
+    findMinimalRouteWeight();
 }
 
-std::list<int> DynamicProgramming::combinations(int r)
+bool DynamicProgramming::checkIfElemInSubset(unsigned elem, unsigned subset)
 {
-    std::list<int> subsets;
-    combinations(0,0,r,N,subsets);
+  return ((1 << elem) & subset) != 0;
+}
+
+std::list<unsigned> DynamicProgramming::createSubsets(unsigned r)
+{
+    std::list<unsigned> subsets;
+    createSubsets(0,0,r,numbOfCities,subsets);
     return subsets;
 }
 
-void DynamicProgramming::combinations(int set, int at, int r, int n, std::list<int> subsets)
+void DynamicProgramming::createSubsets(unsigned set, unsigned at, unsigned r, unsigned n, std::list<unsigned> & subsets)
 {
     int elementsLeftToPick = n - at;
     if (elementsLeftToPick < r) return;
@@ -137,7 +168,7 @@ void DynamicProgramming::combinations(int set, int at, int r, int n, std::list<i
         {
             set |= 1 << i;
 
-            combinations(set, i + 1, r - 1, n, subsets);
+            createSubsets(set, i + 1, r - 1, n, subsets);
 
             set &= ~(1 << i);
         }

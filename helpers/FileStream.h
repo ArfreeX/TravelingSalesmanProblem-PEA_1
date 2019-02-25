@@ -18,6 +18,7 @@ public:
     void readStart(int &edges, int &vertexs, int &starting, int &ending);
     std::vector<std::vector<int>> readData();
     void write(std::vector<std::vector<int>> array, std::string filename);
+    void write(std::vector<long double> array, unsigned dataSize, std::string filename);
 
 private:
     std::ifstream fileRead; // odczyt z pliku
